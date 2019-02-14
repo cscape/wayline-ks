@@ -1,8 +1,8 @@
 {
   "name": "wayline-ks",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Kitchen sink for testing Wayline interactive demos",
-  "author": "Cyberscape",
+  "author": "Cyberscape <info@cyberscape.co>",
   "private": true,
   "scripts": {
     "dev": "cross-env NODE_ENV=development nodemon server/index.js --watch server",
