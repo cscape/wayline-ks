@@ -14,7 +14,7 @@ async function start() {
 
   const {
     host = process.env.HOST || '127.0.0.1',
-    port = process.env.PORT || 3000
+    port = process.env.$PORT || process.env.PORT || 3000
   } = nuxt.options.server
 
   app.use('/feedproxy', async (req, res) => {
