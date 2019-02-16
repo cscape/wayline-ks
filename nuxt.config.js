@@ -18,6 +18,10 @@ module.exports = {
     ]
   },
 
+  env: {
+    wayconfig: require('@wayline/config')
+  },
+
   /*
   ** Customize the progress-bar color
   */
