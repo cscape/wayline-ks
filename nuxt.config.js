@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 require('dotenv').config()
 const pkg = require('./package')
 
@@ -66,6 +68,8 @@ module.exports = {
     ** You can extend webpack config here
     */
     extend(config, ctx) {
+      return
+
       // Run ESLint on save
       if (ctx.isDev && ctx.isClient) {
         config.module.rules.push({
