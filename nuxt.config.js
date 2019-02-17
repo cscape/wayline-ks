@@ -1,3 +1,4 @@
+require('dotenv').config()
 const pkg = require('./package')
 
 module.exports = {
@@ -19,6 +20,7 @@ module.exports = {
   },
 
   env: {
+    bingmaps: process.env.BINGMAPS_TOKEN,
     wayconfig: require('@wayline/config')
   },
 
