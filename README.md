@@ -1,6 +1,8 @@
 # Wayline Kitchen Sink
 
-> Kitchen sink for testing Wayline interactive demos
+Kitchen sink for testing Wayline interactive demos
+
+Set the `BINGMAPS_TOKEN` for this project to work properly
 
 ## Build Setup
 
