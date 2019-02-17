@@ -17,7 +17,7 @@
     "@nuxtjs/axios": "^5.3.6",
     "@nuxtjs/pwa": "^2.6.0",
     "@wayline/config": "cscape/wayline-config",
-    "@wayline/transformer": "cscape/wayline-transformer",
+    "@wayline/transformer": "cscape/wayline-transformer#f5a23327475f3b7d0f5d0d925c9b77cd52355cdd",
     "axios": "^0.18.0",
     "bootstrap": "^4.1.3",
     "bootstrap-vue": "^2.0.0-rc.11",
