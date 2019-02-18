@@ -1,29 +1,124 @@
 <template lang="pug">
   div
-    span Miami beach trolley stuff...
-    span {{config}}
+    h1 Miami beach trolley stuff...
+    .ctrls.mb-2
+      .strongctrl
+        p.mb-1.mini-emphasis Actions
+        button(@click='fetchRoute()') Update Routes
+      .routes(v-if='TSO_RouteData.length > 0')
+        p.pt-3.mb-1.mini-emphasis Update Routes
+        button(v-for='route in TSO_RouteData' :key='route.id' @click='fetchLocations(route.id)') {{ route.name }}
+    .map-container
+      l-map.main-map(:zoom='mapc.zoom' :center='mapc.center' @update:zoom='updateZoom' @update:center='updateCenter' ref='primaryMap')
+        //- l-feature-group(name='TSO Miami Beach')
+        //- l-polyline(v-for='route in TSO_RouteData' :key='route._id' :lat-lngs='ROUTE' :stroke='true' :color='"#" + rgb2Hex(route.color)')
+        l-layer-group(layer-type='overlay' name='Routes')
+          l-polyline(v-for='route in TSO_RouteData' :key='route.id' :visible='true' :lat-lngs='route.polyline' :fill='false' :stroke='true' :color='"#" + rgb2Hex(route.color)')
+        
 </template>
 
 <script>
 import axios from 'axios'
 import Vue from 'vue'
-import VueLayers from 'vuelayers'
-import 'vuelayers/lib/style.css'
+import TSOMobile from '~/libs/tso.js'
+import Polyline from 'google-polyline'
+import BingLayer from 'leaflet-bing-layer'
 
-Vue.use(VueLayers)
+const { PublicTransportation } = TSOMobile
+const rgb2Hex = rgb => rgb.map(n => ('00' + n.toString(16)).slice(-2)).join('')
 
 export default {
   data() {
     return {
+      TSO_COMPANYID: 22844,
+      TSO_Locations: {},
+      TSO_RouteData: [],
+      config: {},
+      mapc: {
+        zoom: 12,
+        center: [25.806320297597175, -80.12830351945014],
+        rotation: 0,
+        geolocPosition: null
+      }
     }
   },
+  mounted() {
+    this.$nextTick(() => {
+      const map = this.$refs.primaryMap.mapObject
+      L.tileLayer.bing({
+        bingMapsKey: process.env.bingmaps,
+        imagerySet: 'CanvasGray',
+        detectRetina: true
+      }).addTo(map)
+      
+      map.locate({
+        watch: true,
+        enableHighAccuracy: true
+      })
+      map.on('locationfound', e => (this.mapc.geolocPosition = e.latlng))
+    })
+  },
+  computed: {
+  },
   asyncData({ env }) {
-    return { config: env.wayconfig }
+    return {
+      config: env.wayconfig,
+      // bingmaps_token: env.bingmaps
+    }
   },
   methods: {
     async fetchRoute() {
-      await axios.get()
+      const rt = await PublicTransportation.GetRoutes(this.TSO_COMPANYID)
+      const pr = rt.map(o => ({ ...o, polyline: this.decodePolyline(o.path).map(p => L.latLng(...p)) }))
+      this.TSO_RouteData = pr
+      return pr
+    },
+    async fetchLocations(routeId) {
+      const rt = await PublicTransportation.GetLocations(null, routeId)
+      this.TSO_Locations[routeId] = rt
+      return rt
+    },
+    panOver([lat, long]) {
+      this.$refs.primaryMap.mapObject.flyTo([lat, long])
+    },
+    decodePolyline(polyline) {
+      return Polyline.decode(polyline)
+    },
+    updateCenter(latLng) {
+      this.mapc.center = Object.values(latLng) // works for objects{} and arrays
+    },
+    updateZoom(num) {
+      this.mapc.zoom = num
+    },
+    rgb2Hex() {
+      return rgb2Hex(...arguments)
     }
   }
 }
 </script>
+
+<style>
+.map-container {
+  position: relative;
+  height: 400px;
+  width: 100%;
+}
+.ctrls button {
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: #FFF;
+  border: 2pt solid currentColor;
+  color: #0099BC;
+  font-weight: 500;
+  margin: 0 2pt 2pt 0;
+  font-size: 0.9em;
+}
+.ctrls button:active, .ctrls button:active:focus {
+  background-color: #0099BC;
+  color: #FFF;
+  outline: 1pt dotted #0099BC;
+}
+.ctrls button:focus {
+  outline: none;
+}
+</style>

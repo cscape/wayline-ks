@@ -1,4 +1,11 @@
-<template lang="pug">
-  div
-    span City of miami trolley
+<template>
+  <div id="app">
+    miami trolley
+  </div>
 </template>
+
+<script>
+</script>
+
+<style>
+</style>
