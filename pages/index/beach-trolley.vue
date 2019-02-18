@@ -5,6 +5,7 @@
       .strongctrl
         p.mb-1.mini-emphasis Actions
         button(@click='fetchRoute()') Update all routes
+        button(v-if='TSO_RouteData.length > 0' @click='toggleLocationPoller()' :class='pollingInterval != null ? "activated" : ""') Auto-Refresh ({{ pollingInterval == null ? 'Off' : 'On' }})
       .routes(v-if='TSO_RouteData.length > 0')
         p.pt-3.mb-1.mini-emphasis Update Routes
         button(v-for='route in TSO_RouteData' :key='route.id' @click='fetchLocations(route.id)') {{ route.name }}
@@ -36,6 +37,7 @@ export default {
       TSO_Locations: {},
       TSO_RouteData: [],
       config: {},
+      pollingInterval: null,
       mapc: {
         zoom: 12,
         center: [25.806320297597175, -80.12830351945014],
@@ -94,6 +96,16 @@ export default {
     },
     rgb2Hex() {
       return rgb2Hex(...arguments)
+    },
+    toggleLocationPoller() {
+      if (this.pollingInterval == null) {
+        this.pollingInterval = setInterval(() => {
+          this.TSO_RouteData.forEach(r => this.fetchLocations(r.id))
+        }, 10000)
+      } else {
+        clearInterval(this.pollingInterval)
+        this.pollingInterval = null
+      }
     }
   }
 }
@@ -119,6 +131,11 @@ export default {
   background-color: #0099BC;
   color: #FFF;
   outline: 1pt dotted #0099BC;
+}
+.ctrls button.activated {
+  background-color: #0099BC;
+  border: 2pt solid #0099BC;
+  color: #FFF;
 }
 .ctrls button:focus {
   outline: none;
