@@ -1,8 +1,9 @@
-const axios = require('axios')
+import axios from 'axios'
+
 const {
   PubTransLocations, PubTransNearby, PubTransNews, PubTransRouteStops, PubTransRoutes
 } = require('@wayline/transformer').TSOMobile
-const basefeed = require('@wayline/config').basefeeds.TSOMobile
+const basefeed = (process.env.wayconfig).basefeeds.TSOMobile
 
 const buildURL = (keys = {}) => {
   const _ = (Date.now() << 5).toString(16) // Just a timestamp, binary-shifted and encoded in hex
@@ -51,4 +52,4 @@ const TSOMobile = {
   }
 }
 
-module.exports = TSOMobile
+export default TSOMobile
