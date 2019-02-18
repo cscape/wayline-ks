@@ -2,6 +2,7 @@
   "Welcome": "welcome",
   "Trolley Trackers": {
     "Miami Beach": "beach-trolley",
-    "City of Miami": "citymiami-trolley"
+    "City of Miami": "citymiami-trolley",
+    "Test": "trolley2"
   }
 }
