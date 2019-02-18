@@ -1,6 +1,6 @@
 <template lang="pug">
   div
-    h1 Miami beach trolley stuff...
+    h1 Miami Beach Trolley
     .ctrls.mb-2
       .strongctrl
         p.mb-1.mini-emphasis Actions
