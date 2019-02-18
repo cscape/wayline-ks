@@ -1,8 +1,8 @@
 {
   "Welcome": "welcome",
-  "Trolley Trackers": {
+  "Trolleys (TSO Mobile)": {
     "Miami Beach": "beach-trolley",
-    "City of Miami": "citymiami-trolley",
-    "Test": "trolley2"
+    "City of Miami (Incomplete)": "citymiami-trolley",
+    "Everything": "tso-trolleys"
   }
 }
