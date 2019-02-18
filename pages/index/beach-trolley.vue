@@ -46,7 +46,7 @@ export default {
     this.$nextTick(() => {
       const map = this.$refs.primaryMap.mapObject
       L.tileLayer.bing({
-        bingMapsKey: process.env.bingmaps,
+        bingMapsKey: process.env.bingmaps || process.env.BINGMAPS_TOKEN,
         imagerySet: 'CanvasGray',
         detectRetina: true
       }).addTo(map)
