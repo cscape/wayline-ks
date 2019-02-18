@@ -37,6 +37,19 @@ async function start() {
       })
   })
 
+  app.use('/color_point.svg', (req, res) => {
+    try {
+      let hex = ''
+      if (req.url.indexOf('?') > 0) hex = req.url.split('?')[1]
+      else hex = '000000'
+      const hexColor = hex.replace(/[^A-Fa-f0-9]/g, '').substring(0, 6) // only hex
+      const str = `<?xml version="1.0" encoding="UTF-8"?>\n<svg width="12" height="12" xmlns="http://www.w3.org/2000/svg"><circle cx="6" cy="6" r="4.75" fill="#fff" stroke="#${hexColor}" stroke-width="2.5"/></svg>`
+      res.set('Content-Type', 'image/svg+xml').send(str)
+    } catch (e) {
+      return res.status(500).send('Invalid hex code')
+    }
+  })
+
   // Build only in dev mode
   if (config.dev) {
     const builder = new Builder(nuxt)

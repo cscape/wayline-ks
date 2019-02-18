@@ -4,7 +4,7 @@
     .ctrls.mb-2
       .strongctrl
         p.mb-1.mini-emphasis Actions
-        button(@click='fetchRoute()') Update Routes
+        button(@click='fetchRoute()') Update all routes
       .routes(v-if='TSO_RouteData.length > 0')
         p.pt-3.mb-1.mini-emphasis Update Routes
         button(v-for='route in TSO_RouteData' :key='route.id' @click='fetchLocations(route.id)') {{ route.name }}
@@ -12,9 +12,11 @@
       l-map.main-map(:zoom='mapc.zoom' :center='mapc.center' @update:zoom='updateZoom' @update:center='updateCenter' ref='primaryMap')
         //- l-feature-group(name='TSO Miami Beach')
         //- l-polyline(v-for='route in TSO_RouteData' :key='route._id' :lat-lngs='ROUTE' :stroke='true' :color='"#" + rgb2Hex(route.color)')
-        l-layer-group(layer-type='overlay' name='Routes')
-          l-polyline(v-for='route in TSO_RouteData' :key='route.id' :visible='true' :lat-lngs='route.polyline' :fill='false' :stroke='true' :color='"#" + rgb2Hex(route.color)')
-        
+        l-layer-group(layer-type='overlay' v-for='route in TSO_RouteData' :key='route.id' :name='route.name')
+          l-polyline(:visible='true' :lat-lngs='route.polyline' :fill='false' :stroke='true' :color='"#" + rgb2Hex(route.color)')
+          l-marker(v-if='TSO_Locations[route.id] != null' v-for='unit in TSO_Locations[route.id]'
+            :key='unit.id' :lat-lng='[unit.lat, unit.long]')
+            l-icon(:icon-url='`/color_point.svg?${rgb2Hex(route.color)}`' :icon-anchor='[6, 6]' :icon-size='[12, 12]')
 </template>
 
 <script>
@@ -75,7 +77,7 @@ export default {
     },
     async fetchLocations(routeId) {
       const rt = await PublicTransportation.GetLocations(null, routeId)
-      this.TSO_Locations[routeId] = rt
+      this.$set(this.TSO_Locations, String(routeId), rt)
       return rt
     },
     panOver([lat, long]) {
