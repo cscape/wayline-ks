@@ -1,6 +1,7 @@
 /* eslint-disable */
 
 require('dotenv').config()
+const path = require('path')
 const pkg = require('./package')
 
 module.exports = {
@@ -51,7 +52,8 @@ module.exports = {
     '@nuxtjs/axios',
     // Doc: https://bootstrap-vue.js.org/docs/
     'bootstrap-vue/nuxt',
-    '@nuxtjs/pwa'
+    '@nuxtjs/pwa',
+    'nuxt-leaflet'
   ],
   /*
   ** Axios module configuration
@@ -68,6 +70,7 @@ module.exports = {
     ** You can extend webpack config here
     */
     extend(config, ctx) {
+      config.resolve.alias['leaflet'] = path.join(__dirname, 'node_modules/leaflet')
       return
 
       // Run ESLint on save
