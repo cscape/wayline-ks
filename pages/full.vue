@@ -15,7 +15,7 @@
         .strongctrl
           p.mb-1.mini-emphasis {{ TSO_RouteData.length > 0 ? 'Actions' : 'Loading routes...' }}
           //- button(@click='fetchAllRoutes()') Update all routes
-          button(v-if='TSO_RouteData.length > 0' @click='toggleLocationPoller()' :class='pollingInterval != null ? "activated" : ""') Live Refresh ({{ pollingInterval == null ? 'Off' : 'On' }})
+          button(v-if='TSO_RouteData.length > 0' @click='toggleLocationPoller(); $refs.primaryMap.mapObject._onResize()' :class='pollingInterval != null ? "activated" : ""') Live Refresh ({{ pollingInterval == null ? 'Off' : 'On' }})
           button(v-if='TSO_RouteData.length > 0 && pollingInterval == null' @click='fetchAllLocations()') Refresh
         //- .routes(v-if='TSO_RouteData.length > 0')
           p.pt-3.mb-1.mini-emphasis Update Routes
@@ -79,23 +79,33 @@ export default {
   },
   methods: {
     async fetchAllRoutes() {
-      this.$nuxt.$loading.start()
-      this.TSO_COMPANIES.forEach(async companyId => {
-        const routeData = await this.fetchRoute(companyId)
+      this.$Progress.start()
+      const allChunks = this.TSO_COMPANIES.length
+      for (let i = 0; i < allChunks; i += 1) {
+        const routeData = await this.fetchRoute(this.TSO_COMPANIES[i])
         this.TSO_RouteData.push(...routeData)
-      })
-      this.$nuxt.$loading.finish()
-      return this.TSO_RouteData
+        this.$Progress.increase(1 / allChunks)
+        continue
+      }
+      this.$Progress.finish()
     },
     async fetchRoute(companyId) {
       const rt = await PublicTransportation.GetRoutes(companyId)
       const pr = rt.map(o => ({ ...o, polyline: this.decodePolyline(o.path).map(p => L.latLng(...p)) }))
       return pr
     },
-    async fetchAllLocations() {
-      this.$nuxt.$loading.start()
-      this.TSO_RouteData.forEach(async r => await this.fetchLocations(r.id))
-      this.$nuxt.$loading.finish()
+    async fetchAllLocations(stump = false) {
+      if (!stump) this.$Progress.start()
+      let k = 0;
+      const runner = async () => {
+        if (this.TSO_RouteData.length <= k) return true
+        await this.fetchLocations(this.TSO_RouteData[k].id)
+        if (!stump) this.$Progress.increase(1 / this.TSO_RouteData.length)
+        k += 1
+        await runner()
+      }
+      await runner()
+      if (!stump) this.$Progress.finish()
     },
     async fetchLocations(routeId) {
       const rt = await PublicTransportation.GetLocations(null, routeId)
@@ -117,13 +127,10 @@ export default {
     rgb2Hex() {
       return rgb2Hex(...arguments)
     },
-    toggleLocationPoller() {
+    async toggleLocationPoller() {
       if (this.pollingInterval == null) {
-        const fn = () => {
-          this.TSO_RouteData.forEach(r => this.fetchLocations(r.id))
-        }
-        fn()
-        this.pollingInterval = setInterval(fn, 10000)
+        this.fetchAllLocations(true)
+        this.pollingInterval = setInterval(async () => { await this.fetchAllLocations(true) }, 10000)
       } else {
         clearInterval(this.pollingInterval)
         this.pollingInterval = null
@@ -181,7 +188,7 @@ export default {
   background-color: #EA005E;
   border-color: #EA005E;
   color: #000;
-  animation-name: pulse;
+  /* animation-name: pulse; */
   animation-duration: 1.5s;
   animation-iteration-count: infinite;
   animation-direction: alternate-reverse;

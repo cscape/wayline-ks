@@ -28,6 +28,10 @@ module.exports = {
     ]
   },
 
+  icon: {
+    iconSrc: 'black-icon.png'
+  },
+
   env: {
     bingmaps: process.env.BINGMAPS_TOKEN,
     wayconfig: require('@wayline/config')
