@@ -182,9 +182,48 @@ export default {
   animation-iteration-count: infinite;
   animation-direction: alternate-reverse;
   animation-timing-function: ease-in-out;
-  animation-delay: 0.2s;
 }
 .ctrls button:focus {
   outline: none;
 }
 </style>
+
+<style>
+.leaflet-container .leaflet-control-attribution * {
+  color: #FFF;
+}
+.leaflet-container .leaflet-control-attribution {
+  background-color: #101010;
+  color: #FFF;
+  opacity: 0.35;
+  padding: 2pt 6pt;
+}
+
+.leaflet-control-zoom > a:hover {
+  background-color: #2B2B2B;
+  color: #F2F2F2;
+}
+
+.leaflet-control-zoom > a {
+  background-color: #121212;
+  box-shadow: none !important;
+  border: 1px solid #F2F2F2 !important;
+  border-width: 1px !important;
+  color: #F2F2F2;
+  border-radius: 100% !important;
+  width: 36px !important;
+  height: 36px !important;
+  line-height: 35px !important;
+  font-size: 20px !important;
+  margin-bottom: 8pt;
+  text-indent: 0px;
+}
+
+.leaflet-left.leaflet-top .leaflet-control {
+  margin: 24pt 0 0 24pt;
+}
+.leaflet-touch .leaflet-control-layers, .leaflet-touch .leaflet-bar {
+  border: none;
+}
+</style>
+
