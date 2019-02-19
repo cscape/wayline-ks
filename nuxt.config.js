@@ -15,10 +15,16 @@ module.exports = {
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: pkg.description }
+      { hid: 'description', name: 'description', content: pkg.description },
+      { name: 'theme-color', content: '#080808' },
+      { name: 'application-name', content: 'Wayline' }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/black-icon.png' }
+      { rel: 'icon', href: '/black-icon.png' },
+      { rel: 'icon', type: 'apple-touch-icon', href: '/black-icon.png' },
+      { rel: 'icon', href: '/black-icon.svg' },
+      { rel: 'icon', type: 'image/x-icon', href: '/black-icon.svg' },
+      { rel: 'icon', type: 'shortcut icon', href: '/black-icon.svg' }
     ]
   },
 
