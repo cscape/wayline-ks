@@ -54,7 +54,7 @@ export default {
       map._onResize()
       L.tileLayer.bing({
         bingMapsKey: process.env.bingmaps || process.env.BINGMAPS_TOKEN,
-        imagerySet: 'CanvasGray',
+        imagerySet: 'CanvasDark',
         detectRetina: true
       }).addTo(map)
       
