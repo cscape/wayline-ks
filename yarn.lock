@@ -1512,8 +1512,8 @@
     vue-template-es2015-compiler "^1.8.2"
 
 "@wayline/config@cscape/wayline-config":
-  version "1.1.2"
-  resolved "https://codeload.github.com/cscape/wayline-config/tar.gz/6e1b97e45dba79f4d1e92737970632b72a7717a0"
+  version "1.3.7"
+  resolved "https://codeload.github.com/cscape/wayline-config/tar.gz/ccb3d14e53dfca20a7024f89c657fec76b7fac30"
   dependencies:
     toml "^3.0.0"
 
