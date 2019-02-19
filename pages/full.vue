@@ -1,8 +1,8 @@
 <template lang="pug">
   section.flex-column.d-flex(style='height: 100vh;')
     Nav(:dark='true')
-    b-container.full-contain.flex-fill(fluid)
-      .map-container.row(ref='mpContain')
+    b-container.full-contain.flex-fill.d-flex(fluid)
+      .map-container.flex-fill.row(ref='mpContain')
         l-map.main-map(:zoom='mapc.zoom' :center='mapc.center' @update:zoom='updateZoom' @update:center='updateCenter' ref='primaryMap')
           //- l-feature-group(name='TSO Miami Beach')
           //- l-polyline(v-for='route in TSO_RouteData' :key='route._id' :lat-lngs='ROUTE' :stroke='true' :color='"#" + rgb2Hex(route.color)')
@@ -106,6 +106,7 @@ export default {
       }
       await runner()
       if (!stump) this.$Progress.finish()
+      return
     },
     async fetchLocations(routeId) {
       const rt = await PublicTransportation.GetLocations(null, routeId)
@@ -130,7 +131,7 @@ export default {
     async toggleLocationPoller() {
       if (this.pollingInterval == null) {
         this.fetchAllLocations(true)
-        this.pollingInterval = setInterval(async () => { await this.fetchAllLocations(true) }, 10000)
+        this.pollingInterval = setInterval(() => { this.fetchAllLocations(true) }, 10000)
       } else {
         clearInterval(this.pollingInterval)
         this.pollingInterval = null
@@ -163,7 +164,8 @@ export default {
   height: 100%;
 }
 .main-map {
-  height: 100%;
+  position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
 }
 .ctrls button {
   -webkit-appearance: none;
