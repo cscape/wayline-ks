@@ -79,10 +79,12 @@ export default {
   },
   methods: {
     async fetchAllRoutes() {
+      this.$nuxt.$loading.start()
       this.TSO_COMPANIES.forEach(async companyId => {
         const routeData = await this.fetchRoute(companyId)
         this.TSO_RouteData.push(...routeData)
       })
+      this.$nuxt.$loading.finish()
       return this.TSO_RouteData
     },
     async fetchRoute(companyId) {
@@ -91,7 +93,9 @@ export default {
       return pr
     },
     async fetchAllLocations() {
-      this.TSO_RouteData.forEach(r => this.fetchLocations(r.id))
+      this.$nuxt.$loading.start()
+      this.TSO_RouteData.forEach(async r => await this.fetchLocations(r.id))
+      this.$nuxt.$loading.finish()
     },
     async fetchLocations(routeId) {
       const rt = await PublicTransportation.GetLocations(null, routeId)
