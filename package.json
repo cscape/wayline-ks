@@ -1,6 +1,6 @@
 {
   "name": "wayline-ks",
-  "version": "1.0.1",
+  "version": "1.2.1",
   "description": "Kitchen sink for testing Wayline interactive demos",
   "author": "Cyberscape <info@cyberscape.co>",
   "private": true,
