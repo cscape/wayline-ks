@@ -3,7 +3,7 @@ import axios from 'axios'
 const {
   PubTransLocations, PubTransNearby, PubTransNews, PubTransRouteStops, PubTransRoutes
 } = require('@wayline/transformer').TSOMobile
-const cfg = process.env.wayconfig != null ? process.env.wayconfig : require('@wayline/config')
+const cfg = process.env.wayconfig || require('@wayline/config')
 const basefeed = cfg.basefeeds.TSOMobile
 
 const buildURL = (keys = {}) => {

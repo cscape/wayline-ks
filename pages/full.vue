@@ -61,11 +61,8 @@ export default {
         detectRetina: true
       }).addTo(map)
       
-      map.locate({
-        watch: true,
-        enableHighAccuracy: true
-      })
-      map.on('locationfound', e => (this.mapc.geolocPosition = e.latlng))
+      // map.locate({ watch: true, enableHighAccuracy: true })
+      // map.on('locationfound', e => (this.mapc.geolocPosition = e.latlng))
       this.fetchAllRoutes()
     })
   },
@@ -78,13 +75,16 @@ export default {
     }
   },
   methods: {
+    prc (num) {
+      return Math.round((1 / Number(prc)) * 100)
+    },
     async fetchAllRoutes() {
       this.$Progress.start()
       const allChunks = this.TSO_COMPANIES.length
       for (let i = 0; i < allChunks; i += 1) {
         const routeData = await this.fetchRoute(this.TSO_COMPANIES[i])
         this.TSO_RouteData.push(...routeData)
-        this.$Progress.increase(1 / allChunks)
+        this.$Progress.increase((1 / allChunks) * 100)
         continue
       }
       this.$Progress.finish()
@@ -98,15 +98,15 @@ export default {
       if (!stump) this.$Progress.start()
       let k = 0;
       const runner = async () => {
-        if (this.TSO_RouteData.length <= k) return true
+        if (k >= this.TSO_RouteData.length) return true
         await this.fetchLocations(this.TSO_RouteData[k].id)
-        if (!stump) this.$Progress.increase(1 / this.TSO_RouteData.length)
+        if (!stump) this.$Progress.increase(Math.floor(1 / this.TSO_RouteData.length) * 100)
         k += 1
         await runner()
       }
       await runner()
       if (!stump) this.$Progress.finish()
-      return
+      return true
     },
     async fetchLocations(routeId) {
       const rt = await PublicTransportation.GetLocations(null, routeId)
