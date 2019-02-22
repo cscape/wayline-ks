@@ -3,7 +3,8 @@ import axios from 'axios'
 const {
   PubTransLocations, PubTransNearby, PubTransNews, PubTransRouteStops, PubTransRoutes
 } = require('@wayline/transformer').TSOMobile
-const basefeed = (process.env.wayconfig).basefeeds.TSOMobile
+const cfg = process.env.wayconfig != null ? process.env.wayconfig : require('@wayline/config')
+const basefeed = cfg.basefeeds.TSOMobile
 
 const buildURL = (keys = {}) => {
   const _ = (Date.now() << 5).toString(16) // Just a timestamp, binary-shifted and encoded in hex
