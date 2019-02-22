@@ -34,7 +34,8 @@ module.exports = {
 
   env: {
     bingmaps: process.env.BINGMAPS_TOKEN,
-    wayconfig: require('@wayline/config')
+    wayconfig: require('@wayline/config'),
+    API_PATH: require('./server/no-prod')
   },
 
   /*
