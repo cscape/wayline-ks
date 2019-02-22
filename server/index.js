@@ -7,9 +7,11 @@ const app = express()
 
 // Import and Set Nuxt.js options
 const config = require('../nuxt.config.js')
+const apiRouter = require('./api/router')
 config.dev = !(process.env.NODE_ENV === 'production')
+const API_PATH = process.env.API_PATH || config.env.API_PATH
 
-async function start() {
+async function start () {
   // Init Nuxt.js
   const nuxt = new Nuxt(config)
 
@@ -49,6 +51,9 @@ async function start() {
       return res.status(500).send('Invalid hex code')
     }
   })
+
+  app.use(API_PATH, apiRouter)
+  console.log(`See http://${host}:${port}${API_PATH}/`)
 
   // Build only in dev mode
   if (config.dev) {
