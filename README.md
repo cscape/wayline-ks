@@ -2,7 +2,7 @@
 
 Kitchen sink for testing Wayline interactive demos
 
-Set the `BINGMAPS_TOKEN` for this project to work properly
+Set the `BINGMAPS_TOKEN` environment variable for this project to work properly
 
 ## Build Setup
 
@@ -22,3 +22,8 @@ $ yarn run generate
 ```
 
 This project is based on [Nuxt.js](https://nuxtjs.org).
+
+## License
+
+[MIT](LICENSE) © [Cyberscape](https://cyberscape.co/).
+

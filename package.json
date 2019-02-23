@@ -4,6 +4,7 @@
   "description": "Kitchen sink for testing Wayline interactive demos",
   "author": "Cyberscape <info@cyberscape.co>",
   "private": true,
+  "license": "MIT",
   "scripts": {
     "dev": "cross-env NODE_ENV=development nodemon -r dotenv/config server/index.js --watch server",
     "build": "nuxt build",
