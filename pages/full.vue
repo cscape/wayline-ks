@@ -76,7 +76,7 @@ export default {
   },
   methods: {
     prc (num) {
-      return Math.round((1 / Number(prc)) * 100)
+      return Math.round((1 / Number(num)) * 100)
     },
     async fetchAllRoutes() {
       this.$Progress.start()
@@ -113,20 +113,20 @@ export default {
       this.$set(this.TSO_Locations, String(routeId), rt)
       return rt
     },
-    panOver([lat, long]) {
-      this.$refs.primaryMap.mapObject.flyTo([lat, long])
-    },
     decodePolyline(polyline) {
       return Polyline.decode(polyline)
+    },
+    rgb2Hex() {
+      return rgb2Hex(...arguments)
+    },
+    panOver([lat, long]) {
+      this.$refs.primaryMap.mapObject.flyTo([lat, long])
     },
     updateCenter(latLng) {
       this.mapc.center = Object.values(latLng) // works for objects{} and arrays
     },
     updateZoom(num) {
       this.mapc.zoom = num
-    },
-    rgb2Hex() {
-      return rgb2Hex(...arguments)
     },
     async toggleLocationPoller() {
       if (this.pollingInterval == null) {
