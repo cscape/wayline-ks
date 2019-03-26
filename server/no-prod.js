@@ -8,6 +8,6 @@ const path = () => '/api/' + crypto
   .map(s => Math.random() < 0.2 ? s + '/' : s) // randomly add slashes
   .join('')
   .split('/')
-  .filter(a => a !== '').join('/') // remove last slash
+  .filter(a => a !== '').join('-') // remove last slash
 
 module.exports = path()
