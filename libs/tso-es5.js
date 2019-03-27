@@ -53,4 +53,4 @@ const TSOMobile = {
   }
 }
 
-export default TSOMobile
+module.exports = TSOMobile
