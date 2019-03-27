@@ -70,6 +70,7 @@ export default {
   },
   asyncData({ env }) {
     return {
+      _env: env,
       config: env.wayconfig,
       // bingmaps_token: env.bingmaps
     }
@@ -96,22 +97,36 @@ export default {
     },
     async fetchAllLocations(stump = false) {
       if (!stump) this.$Progress.start()
-      let k = 0;
-      const runner = async () => {
-        if (k >= this.TSO_RouteData.length) return true
-        await this.fetchLocations(this.TSO_RouteData[k].id)
-        if (!stump) this.$Progress.increase(Math.floor(1 / this.TSO_RouteData.length) * 100)
-        k += 1
-        await runner()
+      const rts = this.TSO_RouteData.map(a => a.id).join(',')
+      const xhr = new XMLHttpRequest()
+      xhr.open('GET', `${process.env.API_PATH}/stream/TSOMobile/locations?RouteIds=${rts}`, true)
+
+      let k = 0
+      let size = 0
+      xhr.onprogress = () => {
+        if (xhr.responseText == null) return
+        const fdata = xhr.responseText.split('\n').splice(k).filter(a => a !== '')
+        size += xhr.responseText.length
+        const data = fdata.map(a => JSON.parse(a))
+        data.forEach(obj => {
+          this.$set(this.TSO_Locations, String(obj.id), obj.data)
+          if (!stump) this.$Progress.increase((1 / this.TSO_RouteData.length) * 100)
+          k += 1
+        })
       }
-      await runner()
-      if (!stump) this.$Progress.finish()
-      return true
+
+      xhr.onreadystatechange = () => {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          if (!stump) this.$Progress.finish()
+          return true
+        }
+      }
+      xhr.send()
     },
     async fetchLocations(routeId) {
-      const rt = await PublicTransportation.GetLocations(null, routeId)
-      this.$set(this.TSO_Locations, String(routeId), rt)
-      return rt
+      const { data } = await axios.get(`${process.env.API_PATH}/TSOMobile/locations?RouteId=${routeId}`)
+      this.$set(this.TSO_Locations, String(routeId), data)
+      return data
     },
     decodePolyline(polyline) {
       return Polyline.decode(polyline)
@@ -131,7 +146,7 @@ export default {
     async toggleLocationPoller() {
       if (this.pollingInterval == null) {
         this.fetchAllLocations(true)
-        this.pollingInterval = setInterval(() => { this.fetchAllLocations(true) }, 10000)
+        this.pollingInterval = setInterval(() => { this.fetchAllLocations(true) }, 7500)
       } else {
         clearInterval(this.pollingInterval)
         this.pollingInterval = null
